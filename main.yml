@@ -1,0 +1,11 @@
+---
+- name: Tomcat deployment playbook
+  hosts: tomcat-nodes
+  #become: yes
+  #become_method: sudo
+  #remote_user: root
+
+  roles:
+    - install_tomcat
+    - clone_ansible_deploy
+    - create_cronjob

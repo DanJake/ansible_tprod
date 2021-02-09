@@ -1,0 +1,14 @@
+---
+- name: Create a deploy directory
+  file:
+    path: /opt/deployweb
+    state: directory
+    owner: ansible
+    group: ansible
+
+- name: Clone ansible deploy
+  git:
+    repo: https://github.com/DanJake/ansible_for_web.git
+    dest: "{{ web_deploy }}"
+  become: yes
+  become_user: ansible

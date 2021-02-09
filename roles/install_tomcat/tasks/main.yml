@@ -1,0 +1,83 @@
+---
+- name: Install jdk
+  apt:
+    name: default-jdk
+    state: present
+
+- name: Add tomcat group
+  group:
+    name: tomcat
+
+- name: Add tomcat user
+  user:
+    name: tomcat
+    group: tomcat
+    home: /opt/tomcat
+    createhome: no
+    system: yes
+
+- name: Add ansible user to tomcat group
+  user:
+    name: ansible
+    groups: tomcat
+    append: yes
+
+- name: Download Tomcat
+  get_url:
+    url: "{{ tomcat_archive_url }}"
+    dest: "{{ tomcat_archive_dest }}"
+
+- name: Create a tomcat directory
+  file:
+    path: /opt/tomcat
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+- name: Extract tomcat archive
+  unarchive:
+    src: "{{ tomcat_archive_dest }}"
+    dest: /opt/tomcat
+    owner: tomcat
+    group: tomcat
+    remote_src: yes
+    extra_opts: "--strip-components=1"
+    creates: /opt/tomcat/bin
+
+- name: Copy tomcat service file
+  template:
+    src: templates/tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+
+- name: Recursively change ownership of a directory
+  file:
+    path: "{{ tomcat_home }}/webapps"
+    state: directory
+    recurse: yes
+    mode: '770'
+
+- name: Recursively change ownership of a directory
+  file:
+    path: "{{ tomcat_home }}//logs/catalina.out"
+    mode: '1660'
+
+- name: Start tomcat
+  service:
+    daemon_reload: yes
+    name: tomcat
+    state: started
+    enabled: yes
+
+- name: Copy tomcat users file
+  template:
+    src: templates/tomcat-users.xml.j2
+    dest: "{{ tomcat_home }}/conf/tomcat-users.xml"
+
+- name: Copy tomcat cintext file
+  template:
+    src: context.xml.j2
+    dest: "{{ item }}"
+  with_items:
+    - "{{ tomcat_home }}/webapps/host-manager/META-INF/context.xml"
+    - "{{ tomcat_home }}/webapps/manager/META-INF/context.xml"
+  notify: restart tomcat

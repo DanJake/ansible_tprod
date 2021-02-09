@@ -1,0 +1,17 @@
+---
+- cron:
+    name: "check web app update"
+    minute: "*/1"
+    user: ansible
+    job: "/usr/bin/ansible-playbook {{ web_deploy }}/deploy.yml"
+
+- cron:
+    name: "check deploy file update"
+    minute: "*/1"
+    user: ansible
+    job: "/bin/sh -c 'cd {{ web_deploy }} && /usr/bin/git pull -q origin main'"
+
+- name: restart cron
+  service:
+    name: cron
+    state: restarted
