@@ -49,7 +49,7 @@
     src: templates/tomcat.service.j2
     dest: /etc/systemd/system/tomcat.service
 
-- name: Recursively change ownership of a directory
+- name: Recursively change mod webapps dir
   file:
     path: "{{ tomcat_home }}/webapps"
     state: directory
@@ -58,7 +58,7 @@
 
 - name: Recursively change ownership of a directory
   file:
-    path: "{{ tomcat_home }}//logs/catalina.out"
+    path: "{{ tomcat_home }}/logs/catalina.out"
     mode: '1660'
 
 - name: Start tomcat
