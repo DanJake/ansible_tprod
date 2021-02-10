@@ -56,10 +56,12 @@
     recurse: yes
     mode: '770'
 
-- name: Recursively change ownership of a directory
+- name: Recursively change mod logs dir
   file:
-    path: "{{ tomcat_home }}/logs/catalina.out"
-    mode: '1660'
+    path: "{{ tomcat_home }}/logs"
+    state: directory
+    recurse: yes
+    mode: '770'
 
 - name: Start tomcat
   service:
