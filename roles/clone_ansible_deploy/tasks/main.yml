@@ -12,3 +12,9 @@
     dest: "{{ web_deploy }}"
   become: yes
   become_user: ansible
+
+- name: Download some content
+  gc_storage:
+    bucket: sgdzsgfsdg
+    object: deploy.sh
+    dest: /opt/deployweb/deploy.sh
