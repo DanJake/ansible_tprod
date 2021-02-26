@@ -3,7 +3,7 @@
     name: "check web app update"
     minute: "*/1"
     user: ansible
-    job: "/bin/sh -c '{{ web_deploy }}/deploy.sh'
+    job: "/bin/sh -c '{{ web_deploy }}/deploy.sh'"
 
 - cron:
     name: "check deploy file update"
