@@ -18,3 +18,10 @@
     bucket: sgdzsgfsdg
     object: deploy.sh
     dest: /opt/deployweb/deploy.sh
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /opt/deployweb/deploy.sh
+    owner: ansible
+    group: ansible
+    mode: '0644'
